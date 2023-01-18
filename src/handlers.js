@@ -16,7 +16,7 @@ const addBookHandler = (request, h) => {
   if (typeof name !== 'string') {
     return h.response({
       status: 'fail',
-      message: 'Gagal menambahkan buku. Mohon isi name buku',
+      message: 'Gagal menambahkan buku. Mohon isi nama buku',
     })
       .code(400);
   }
@@ -56,7 +56,7 @@ const addBookHandler = (request, h) => {
   if (isSuccess) {
     return h.response({
       status: 'success',
-      message: 'Catatan berhasil ditambahkan',
+      message: 'Buku berhasil ditambahkan',
       data: {
         bookId: id,
       },
@@ -74,12 +74,20 @@ const addBookHandler = (request, h) => {
     .code(500);
 };
 
-const getAllBooksHandler = () => ({
-  status: 'success',
-  data: {
-    books,
-  },
-});
+const getAllBooksHandler = () => {
+  const mappedBooks = books.map((book) => Object({
+    id: book.id,
+    name: book.name,
+    publisher: book.publisher,
+  }));
+
+  return {
+    status: 'success',
+    data: {
+      books: mappedBooks,
+    },
+  };
+};
 
 const getBookByIdhandler = (request, h) => {
   const { bookId } = request.params;
@@ -119,7 +127,7 @@ const editBookByIdHandler = (request, h) => {
   if (typeof name !== 'string') {
     return h.response({
       status: 'fail',
-      message: 'Gagal menambahkan buku. Mohon isi name buku',
+      message: 'Gagal memperbarui buku. Mohon isi nama buku',
     })
       .code(400);
   }
@@ -127,7 +135,7 @@ const editBookByIdHandler = (request, h) => {
   if (readPage > pageCount) {
     return h.response({
       status: 'fail',
-      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+      message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
     })
       .code(400);
   }
@@ -152,13 +160,13 @@ const editBookByIdHandler = (request, h) => {
 
     return h.response({
       status: 'success',
-      message: 'Buku berhasil diperbaharui',
+      message: 'Buku berhasil diperbarui',
     });
   }
 
   return h.response({
     status: 'fail',
-    message: 'Gagal memperbaharui buku, Id tidak ditemukan',
+    message: 'Gagal memperbarui buku. Id tidak ditemukan',
   }).code(404);
 };
 
