@@ -102,8 +102,69 @@ const getBookByIdhandler = (request, h) => {
     .code(404);
 };
 
+const editBookByIdHandler = (request, h) => {
+  const { bookId } = request.params;
+
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+  } = request.payload;
+
+  if (typeof name !== 'string') {
+    return h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi name buku',
+    })
+      .code(400);
+  }
+
+  if (readPage > pageCount) {
+    return h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+    })
+      .code(400);
+  }
+
+  const index = books.findIndex((b) => b.id === bookId);
+
+  const updatedAt = new Date().toISOString();
+
+  if (index !== -1) {
+    books[index] = {
+      ...books[index],
+      name,
+      year,
+      author,
+      summary,
+      publisher,
+      pageCount,
+      readPage,
+      reading,
+      updatedAt,
+    };
+
+    return h.response({
+      status: 'success',
+      message: 'Buku berhasil diperbaharui',
+    });
+  }
+
+  return h.response({
+    status: 'fail',
+    message: 'Gagal memperbaharui buku, Id tidak ditemukan',
+  }).code(404);
+};
+
 module.exports = {
   addBookHandler,
   getAllBooksHandler,
   getBookByIdhandler,
+  editBookByIdHandler,
 };
