@@ -1,4 +1,5 @@
 const Hapi = require('@hapi/hapi');
+const routes = require('./routes');
 
 const init = async () => {
   const server = Hapi.Server({
@@ -11,11 +12,7 @@ const init = async () => {
     },
   });
 
-  server.route([{
-    method: 'GET',
-    path: '/books',
-    handler: () => 'Hello World!!',
-  }]);
+  server.route(routes);
 
   await server.start();
 
